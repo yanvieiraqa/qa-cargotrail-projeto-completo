@@ -1,0 +1,17 @@
+# Sobe o sistema (porta 8000) e o simulador (porta 8001) com um único comando: docker compose up --build
+services:
+  simulador:
+    build: .
+    command: python -m simulator.main
+    ports: ["8001:8001"]
+  sistema:
+    build: .
+    command: python -m app.main
+    ports: ["8000:8000"]
+    environment:
+      SIMULADOR_URL: http://simulador:8001
+      SIMULADOR_ATIVO: "true"
+      DB_PATH: /cargotrail/data/cargotrail.db
+    volumes:
+      - ./data:/cargotrail/data
+    depends_on: [simulador]
