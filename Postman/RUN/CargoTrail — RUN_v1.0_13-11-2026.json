@@ -1,0 +1,2371 @@
+{
+	"id": "1d894192-976c-462f-892b-4960288b3af7",
+	"name": "CargoTrail — Testes de API",
+	"timestamp": "2026-11-13T14:31:49.415Z",
+	"collection_id": "58741066-77b60caa-4896-4377-891a-5e418ed34c54",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 104,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-11-13T14:31:34.100Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "3fd9a1fe-414a-4a3a-8640-13f2e678c38c",
+			"name": "Login Administrador",
+			"url": "http://localhost:8000/api/auth/login",
+			"time": 145,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				145
+			],
+			"allTests": [
+				{
+					"Status 200": true
+				}
+			]
+		},
+		{
+			"id": "bbad0a6c-0208-40ee-8b62-c80ebfc4b7ba",
+			"name": "Login Operador",
+			"url": "http://localhost:8000/api/auth/login",
+			"time": 101,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				101
+			],
+			"allTests": [
+				{
+					"Status 200": true
+				}
+			]
+		},
+		{
+			"id": "cf037971-7785-401b-bc0e-72ba1581daf9",
+			"name": "Login Financeiro",
+			"url": "http://localhost:8000/api/auth/login",
+			"time": 99,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				99
+			],
+			"allTests": [
+				{
+					"Status 200": true
+				}
+			]
+		},
+		{
+			"id": "1ab9a033-b270-4473-8662-3b1a2e0d4972",
+			"name": "Cadastrar transportadora com token do Operador",
+			"url": "http://localhost:8000/api/transportadoras",
+			"time": 53,
+			"responseCode": {
+				"code": 403,
+				"name": "FORBIDDEN"
+			},
+			"tests": {
+				"Status 403": true,
+				"Mensagem contém: Acesso negado": true
+			},
+			"testPassFailCounts": {
+				"Status 403": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Acesso negado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				53
+			],
+			"allTests": [
+				{
+					"Status 403": true,
+					"Mensagem contém: Acesso negado": true
+				}
+			]
+		},
+		{
+			"id": "c6b57881-037f-4941-b1b4-167a2f80cd6e",
+			"name": "DELETE embarcador 1 (Administrador)",
+			"url": "http://localhost:8000/api/embarcadores/1",
+			"time": 7,
+			"responseCode": {
+				"code": 405,
+				"name": "METHOD NOT ALLOWED"
+			},
+			"tests": {
+				"Status 405": true
+			},
+			"testPassFailCounts": {
+				"Status 405": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Status 405": true
+				}
+			]
+		},
+		{
+			"id": "48612078-042e-47a0-914c-5f34a40fc683",
+			"name": "Conferir que o embarcador continua na lista",
+			"url": "http://localhost:8000/api/embarcadores",
+			"time": 121,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 or 401": true,
+				"Embarcador 1 continua": true
+			},
+			"testPassFailCounts": {
+				"Status 200 or 401": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Embarcador 1 continua": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				121
+			],
+			"allTests": [
+				{
+					"Status 200 or 401": true,
+					"Embarcador 1 continua": true
+				}
+			]
+		},
+		{
+			"id": "09a2e487-0b7c-410d-b915-8d9cba311ae0",
+			"name": "1. Preparar pedido de teste (Rascunho)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 78,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				78
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "04dd7d2c-ad70-48d7-ba06-84f598543820",
+			"name": "2. PATCH status → Em execução",
+			"url": "http://localhost:8000/api/pedidos/29/status",
+			"time": 68,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Transição de estado inválida": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Transição de estado inválida": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				68
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Transição de estado inválida": true
+				}
+			]
+		},
+		{
+			"id": "a1be546d-8c41-49f6-8a88-7f64d667b640",
+			"name": "3. PATCH status → Concluído",
+			"url": "http://localhost:8000/api/pedidos/29/status",
+			"time": 64,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Transição de estado inválida": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Transição de estado inválida": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				64
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Transição de estado inválida": true
+				}
+			]
+		},
+		{
+			"id": "fcb5ff62-d8cb-4feb-a94c-44e17fe17ec1",
+			"name": "4. Conferir que o pedido continua em Rascunho",
+			"url": "http://localhost:8000/api/pedidos/29",
+			"time": 69,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"Status do pedido: Rascunho": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status do pedido: Rascunho": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				69
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"Status do pedido: Rascunho": true
+				}
+			]
+		},
+		{
+			"id": "fc5489c7-9753-4a4f-bdab-bf386aab3373",
+			"name": "1. Preparar pedido de teste (Aguardando contratação)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 85,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				85
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "4a1ac622-5723-4fe0-aefe-4269765c61c6",
+			"name": "2. Contratar",
+			"url": "http://localhost:8000/api/pedidos/30/contratar",
+			"time": 62,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: RNTRC vencido": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: RNTRC vencido": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				62
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: RNTRC vencido": true
+				}
+			]
+		},
+		{
+			"id": "2b4bd501-80ea-4eef-9773-6f0b809852ee",
+			"name": "1. Preparar pedido de teste (Aguardando contratação)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 94,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				94
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "37f0919d-b06c-4302-9795-e1afa2132768",
+			"name": "2. Contratar",
+			"url": "http://localhost:8000/api/pedidos/31/contratar",
+			"time": 70,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Motorista não pertence à transportadora": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Motorista não pertence à transportadora": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				70
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Motorista não pertence à transportadora": true
+				}
+			]
+		},
+		{
+			"id": "6fab80c1-e2ac-4eaf-8ce5-6271ae4aeba4",
+			"name": "1. Preparar pedido de teste (Aguardando contratação)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 78,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				78
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "c3ce0c3a-2551-423d-bda3-bd37a748ab2c",
+			"name": "2. Contratar",
+			"url": "http://localhost:8000/api/pedidos/32/contratar",
+			"time": 66,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Veículo não pertence à transportadora": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Veículo não pertence à transportadora": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				66
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Veículo não pertence à transportadora": true
+				}
+			]
+		},
+		{
+			"id": "f727f5a4-d0df-40ce-be53-59915aa8c363",
+			"name": "1. Preparar pedido de teste (Aguardando contratação)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 77,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				77
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "268da83f-4795-4d4f-b982-0202b7952ca7",
+			"name": "2. Contratar",
+			"url": "http://localhost:8000/api/pedidos/33/contratar",
+			"time": 69,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Motorista inativo": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Motorista inativo": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				69
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Motorista inativo": true
+				}
+			]
+		},
+		{
+			"id": "56c8263d-02b0-43e7-b225-6908d254fa60",
+			"name": "1. Preparar pedido de teste (CT-e autorizado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 102,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				102
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "7ebfa1af-9566-471d-8a7e-832289685d84",
+			"name": "2. Alterar frete para R$ 3.600,00",
+			"url": "http://localhost:8000/api/pedidos/34/frete",
+			"time": 67,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Frete não pode ser alterado após o CT-e": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Frete não pode ser alterado após o CT-e": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				67
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Frete não pode ser alterado após o CT-e": true
+				}
+			]
+		},
+		{
+			"id": "6f212244-ce6c-4240-8db0-c41b30a9440d",
+			"name": "1. Preparar pedido de teste (Aguardando contratação)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 77,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				77
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "b26b05d8-4d00-4ada-a475-6c5a68e629f9",
+			"name": "2. Emitir CT-e",
+			"url": "http://localhost:8000/api/pedidos/35/cte",
+			"time": 62,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Pedido não contratado": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Pedido não contratado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				62
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Pedido não contratado": true
+				}
+			]
+		},
+		{
+			"id": "ae09d42e-bf07-49cc-8f4b-0613ac248dfb",
+			"name": "1. Preparar pedido de teste (Contratado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 90,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				90
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "4ebeaa86-0f63-48ca-8091-a5cde15c2a0a",
+			"name": "2. Emitir CT-e",
+			"url": "http://localhost:8000/api/pedidos/36/cte",
+			"time": 63,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: NF-e não vinculada": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: NF-e não vinculada": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				63
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: NF-e não vinculada": true
+				}
+			]
+		},
+		{
+			"id": "ee275d06-d8bc-49dd-b095-317da666be46",
+			"name": "1. Preparar pedido de teste (CT-e autorizado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 92,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				92
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "b4006547-9fa3-4a83-a46d-b3711b811e39",
+			"name": "2. Emitir CT-e de novo",
+			"url": "http://localhost:8000/api/pedidos/37/cte",
+			"time": 64,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Já existe CT-e ativo": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Já existe CT-e ativo": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				64
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Já existe CT-e ativo": true
+				}
+			]
+		},
+		{
+			"id": "97bb5ec3-c85e-4ea6-8cab-6b9aeb0b3748",
+			"name": "1. Preparar pedido de teste (CT-e autorizado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 102,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				102
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "28df604d-46e3-4937-b1f0-80314b8de4aa",
+			"name": "2. Cancelar CT-e",
+			"url": "http://localhost:8000/api/documentos/36/cancelar",
+			"time": 62,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Prazo de cancelamento expirado": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Prazo de cancelamento expirado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				62
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Prazo de cancelamento expirado": true
+				}
+			]
+		},
+		{
+			"id": "a3c2d04c-63b9-4940-905c-91d672984f4f",
+			"name": "1. Preparar pedido de teste (Contratado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 88,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				88
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "2a2dd3e2-fc1c-4fea-a474-93e75dbb33ce",
+			"name": "2. Gerar CIOT",
+			"url": "http://localhost:8000/api/pedidos/39/ciot",
+			"time": 64,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: CT-e autorizado é obrigatório": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: CT-e autorizado é obrigatório": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				64
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: CT-e autorizado é obrigatório": true
+				}
+			]
+		},
+		{
+			"id": "6060ec28-5793-40f5-a21d-1da998a7b5b8",
+			"name": "1. Preparar pedido de teste (CIOT gerado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 94,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				94
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "2a79df46-360d-47ca-aa18-16908cec226d",
+			"name": "2. Gerar CIOT de novo",
+			"url": "http://localhost:8000/api/pedidos/40/ciot",
+			"time": 64,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: CIOT já gerado": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: CIOT já gerado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				64
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: CIOT já gerado": true
+				}
+			]
+		},
+		{
+			"id": "b55ec385-7c9c-4b6f-aa94-627b1e554ae5",
+			"name": "1. Preparar pedido de teste (CT-e autorizado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 98,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				98
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "478d1054-5f26-4699-9f4e-e53bf8b3b8e5",
+			"name": "2. Emitir MDF-e",
+			"url": "http://localhost:8000/api/pedidos/41/mdfe",
+			"time": 66,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: CIOT é obrigatório": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: CIOT é obrigatório": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				66
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: CIOT é obrigatório": true
+				}
+			]
+		},
+		{
+			"id": "2c3ac3cb-a44a-46c5-b8a2-e435c70b70ff",
+			"name": "1. Preparar pedido de teste (CT-e pendente de envio)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 100,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				100
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "e54d6d09-befb-4247-badc-208eaba0f6e7",
+			"name": "2. Emitir MDF-e",
+			"url": "http://localhost:8000/api/pedidos/42/mdfe",
+			"time": 67,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: CT-e autorizado é obrigatório": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: CT-e autorizado é obrigatório": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				67
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: CT-e autorizado é obrigatório": true
+				}
+			]
+		},
+		{
+			"id": "9f624ca2-3c15-4a82-b009-5ba2480a6fb6",
+			"name": "1. Preparar pedido de teste (MDF-e autorizado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 98,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				98
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "904b8f9c-cb96-4fd2-85de-bc3bb90aa681",
+			"name": "2. Cancelar MDF-e",
+			"url": "http://localhost:8000/api/documentos/41/cancelar",
+			"time": 65,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Prazo de cancelamento expirado": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Prazo de cancelamento expirado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				65
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Prazo de cancelamento expirado": true
+				}
+			]
+		},
+		{
+			"id": "710b661b-a969-44ca-8db6-07d0aa447425",
+			"name": "1. Preparar pedido de teste (MDF-e encerrado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 111,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				111
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "8436db49-09bd-49d5-a583-d93b463bc5d5",
+			"name": "2. Cancelar MDF-e",
+			"url": "http://localhost:8000/api/documentos/43/cancelar",
+			"time": 63,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: MDF-e já encerrado": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: MDF-e já encerrado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				63
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: MDF-e já encerrado": true
+				}
+			]
+		},
+		{
+			"id": "c8e52f85-63ac-4e0a-9ca1-cbb75db41b9c",
+			"name": "1. Preparar pedido de teste (No ponto de entrega)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 93,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				93
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "2a19c5aa-194c-42e2-a504-985d177e5aac",
+			"name": "2. Encerrar MDF-e",
+			"url": "http://localhost:8000/api/documentos/45/encerrar",
+			"time": 65,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Entrega não comprovada": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Entrega não comprovada": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				65
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Entrega não comprovada": true
+				}
+			]
+		},
+		{
+			"id": "d04fee69-9a24-4130-928f-8c32261573ef",
+			"name": "1. Preparar pedido de teste (CIOT gerado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 94,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				94
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "dd85065f-b811-4c69-9533-28c3b13c00eb",
+			"name": "2. Iniciar viagem",
+			"url": "http://localhost:8000/api/viagens/34/iniciar",
+			"time": 63,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: MDF-e autorizado é obrigatório": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: MDF-e autorizado é obrigatório": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				63
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: MDF-e autorizado é obrigatório": true
+				}
+			]
+		},
+		{
+			"id": "a8ddab32-7ea8-49a2-bcfd-716c5b0b4dc8",
+			"name": "1. Preparar pedido de teste (MDF-e autorizado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 98,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				98
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "ffc0b002-de8c-4553-8611-0097b96d441b",
+			"name": "2. PATCH estado → No ponto de entrega",
+			"url": "http://localhost:8000/api/viagens/35/estado",
+			"time": 61,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Transição de estado inválida": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Transição de estado inválida": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				61
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Transição de estado inválida": true
+				}
+			]
+		},
+		{
+			"id": "25c65b0e-7319-43c3-ac14-5f0ee3c2c45e",
+			"name": "3. PATCH estado → Entregue",
+			"url": "http://localhost:8000/api/viagens/35/estado",
+			"time": 69,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Transição de estado inválida": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Transição de estado inválida": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				69
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Transição de estado inválida": true
+				}
+			]
+		},
+		{
+			"id": "09a70054-9b67-46b2-a24a-01145042052a",
+			"name": "4. Conferir que a viagem continua em Aguardando saída",
+			"url": "http://localhost:8000/api/viagens/35",
+			"time": 69,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"Estado: Aguardando saída": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Estado: Aguardando saída": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				69
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"Estado: Aguardando saída": true
+				}
+			]
+		},
+		{
+			"id": "690c5a73-1ca9-452b-a841-8e681b58a1d7",
+			"name": "1. Preparar pedido de teste (No ponto de entrega)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 96,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				96
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "81a22d08-6c48-4d46-81de-dd434fcfe3ef",
+			"name": "2. PATCH estado → Entregue",
+			"url": "http://localhost:8000/api/viagens/36/estado",
+			"time": 63,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Transição de estado inválida": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Transição de estado inválida": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				63
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Transição de estado inválida": true
+				}
+			]
+		},
+		{
+			"id": "39fa3a58-f46e-4df2-b97a-61bd8eac5628",
+			"name": "1. Preparar pedido de teste (Em trânsito)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 112,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				112
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "ef0f94d0-6112-4cd6-9936-ece273095dae",
+			"name": "2. Avançar etapa com token do Operador",
+			"url": "http://localhost:8000/api/simulador/viagens/37/avancar",
+			"time": 65,
+			"responseCode": {
+				"code": 403,
+				"name": "FORBIDDEN"
+			},
+			"tests": {
+				"Status 403": true,
+				"Mensagem contém: Acesso negado": true
+			},
+			"testPassFailCounts": {
+				"Status 403": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Acesso negado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				65
+			],
+			"allTests": [
+				{
+					"Status 403": true,
+					"Mensagem contém: Acesso negado": true
+				}
+			]
+		},
+		{
+			"id": "e8fa3dcd-4a7b-43bc-88ed-583427762590",
+			"name": "1. Preparar pedido de teste (Entregue)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 103,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				103
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "378af537-3c69-4b19-8d4e-2d28e051fec4",
+			"name": "2. PUT comprovante",
+			"url": "http://localhost:8000/api/viagens/38/comprovante",
+			"time": 7,
+			"responseCode": {
+				"code": 405,
+				"name": "METHOD NOT ALLOWED"
+			},
+			"tests": {
+				"Status 405": true
+			},
+			"testPassFailCounts": {
+				"Status 405": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Status 405": true
+				}
+			]
+		},
+		{
+			"id": "86d54982-c2e9-4e0b-8e30-f065ac66649b",
+			"name": "3. DELETE comprovante",
+			"url": "http://localhost:8000/api/viagens/38/comprovante",
+			"time": 8,
+			"responseCode": {
+				"code": 405,
+				"name": "METHOD NOT ALLOWED"
+			},
+			"tests": {
+				"Status 405": true
+			},
+			"testPassFailCounts": {
+				"Status 405": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Status 405": true
+				}
+			]
+		},
+		{
+			"id": "35d7d90e-139c-440a-96dc-b1173ab3ba3a",
+			"name": "4. Conferir que o comprovante continua igual",
+			"url": "http://localhost:8000/api/viagens/38/comprovante",
+			"time": 69,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"Recebedor original": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Recebedor original": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				69
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"Recebedor original": true
+				}
+			]
+		},
+		{
+			"id": "ad368f34-db7a-4130-8ed9-c465c766e71b",
+			"name": "1. Preparar pedido de teste (Em trânsito)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 94,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				94
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "ec6afc83-6034-475e-a2b4-51cfde555ed0",
+			"name": "2. Confirmar entrega",
+			"url": "http://localhost:8000/api/viagens/39/comprovante",
+			"time": 261,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Viagem fora do ponto de entrega": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Viagem fora do ponto de entrega": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				261
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Viagem fora do ponto de entrega": true
+				}
+			]
+		},
+		{
+			"id": "e2c12d00-5ca0-43f6-bd94-87045bb0ca67",
+			"name": "1. Preparar pedido de teste (No ponto de entrega)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 97,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				97
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "b4f4f5e1-17bb-4fa0-98aa-9f9257ed1da4",
+			"name": "2. Liberar pagamento (Financeiro)",
+			"url": "http://localhost:8000/api/viagens/40/pagamento",
+			"time": 65,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Entrega não comprovada": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Entrega não comprovada": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				65
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Entrega não comprovada": true
+				}
+			]
+		},
+		{
+			"id": "7ea599d1-8b66-4ac2-9fcb-a50b49854b5b",
+			"name": "1. Preparar pedido de teste (Entregue)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 114,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				114
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "e3aa0e7e-448c-42f6-b7a5-bd7c0074114b",
+			"name": "2. Liberar pagamento (Financeiro)",
+			"url": "http://localhost:8000/api/viagens/41/pagamento",
+			"time": 63,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: MDF-e não encerrado": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: MDF-e não encerrado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				63
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: MDF-e não encerrado": true
+				}
+			]
+		},
+		{
+			"id": "6dd32038-f2e7-4dd6-a4ce-2694ef743fdc",
+			"name": "1. Preparar pedido de teste (Concluído)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 117,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				117
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "6ed3030e-7ef8-4c93-b521-2cb273a8114a",
+			"name": "2. Liberar pagamento de novo (Financeiro)",
+			"url": "http://localhost:8000/api/viagens/42/pagamento",
+			"time": 67,
+			"responseCode": {
+				"code": 409,
+				"name": "CONFLICT"
+			},
+			"tests": {
+				"Status 409": true,
+				"Mensagem contém: Viagem já paga": true
+			},
+			"testPassFailCounts": {
+				"Status 409": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Viagem já paga": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				67
+			],
+			"allTests": [
+				{
+					"Status 409": true,
+					"Mensagem contém: Viagem já paga": true
+				}
+			]
+		},
+		{
+			"id": "c9fdce21-8ed4-4804-985d-397a8cf74c1d",
+			"name": "1. Preparar pedido de teste (MDF-e encerrado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 101,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				101
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "0af039bc-12b7-4d59-9d11-f9064a428193",
+			"name": "2. Liberar pagamento com token do Operador",
+			"url": "http://localhost:8000/api/viagens/43/pagamento",
+			"time": 69,
+			"responseCode": {
+				"code": 403,
+				"name": "FORBIDDEN"
+			},
+			"tests": {
+				"Status 403": true,
+				"Mensagem contém: Acesso negado": true
+			},
+			"testPassFailCounts": {
+				"Status 403": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Acesso negado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				69
+			],
+			"allTests": [
+				{
+					"Status 403": true,
+					"Mensagem contém: Acesso negado": true
+				}
+			]
+		},
+		{
+			"id": "5c1ca4a9-2c24-4c29-a66e-cbaeed13c568",
+			"name": "1. Preparar pedido de teste (MDF-e encerrado)",
+			"url": "http://localhost:8000/api/simulador/pedidos-teste",
+			"time": 113,
+			"responseCode": {
+				"code": 201,
+				"name": "CREATED"
+			},
+			"tests": {
+				"Status 201": true
+			},
+			"testPassFailCounts": {
+				"Status 201": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				113
+			],
+			"allTests": [
+				{
+					"Status 201": true
+				}
+			]
+		},
+		{
+			"id": "a527e610-9118-4821-ad07-ae8de286bcad",
+			"name": "2. Liberar pagamento com token do Administrador",
+			"url": "http://localhost:8000/api/viagens/44/pagamento",
+			"time": 65,
+			"responseCode": {
+				"code": 403,
+				"name": "FORBIDDEN"
+			},
+			"tests": {
+				"Status 403": true,
+				"Mensagem contém: Acesso negado": true
+			},
+			"testPassFailCounts": {
+				"Status 403": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Acesso negado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				65
+			],
+			"allTests": [
+				{
+					"Status 403": true,
+					"Mensagem contém: Acesso negado": true
+				}
+			]
+		},
+		{
+			"id": "6135d1e3-9c5d-49ce-94d6-e75c7ae0470b",
+			"name": "Consultar estado do simulador com token do Operador",
+			"url": "http://localhost:8000/api/simulador/estado",
+			"time": 60,
+			"responseCode": {
+				"code": 403,
+				"name": "FORBIDDEN"
+			},
+			"tests": {
+				"Status 403": true,
+				"Mensagem contém: Acesso negado": true
+			},
+			"testPassFailCounts": {
+				"Status 403": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Mensagem contém: Acesso negado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				60
+			],
+			"allTests": [
+				{
+					"Status 403": true,
+					"Mensagem contém: Acesso negado": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 5586,
+	"collection": {
+		"requests": [
+			{
+				"id": "3fd9a1fe-414a-4a3a-8640-13f2e678c38c",
+				"method": "POST"
+			},
+			{
+				"id": "bbad0a6c-0208-40ee-8b62-c80ebfc4b7ba",
+				"method": "POST"
+			},
+			{
+				"id": "cf037971-7785-401b-bc0e-72ba1581daf9",
+				"method": "POST"
+			},
+			{
+				"id": "1ab9a033-b270-4473-8662-3b1a2e0d4972",
+				"method": "POST"
+			},
+			{
+				"id": "c6b57881-037f-4941-b1b4-167a2f80cd6e",
+				"method": "DELETE"
+			},
+			{
+				"id": "48612078-042e-47a0-914c-5f34a40fc683",
+				"method": "GET"
+			},
+			{
+				"id": "09a2e487-0b7c-410d-b915-8d9cba311ae0",
+				"method": "POST"
+			},
+			{
+				"id": "04dd7d2c-ad70-48d7-ba06-84f598543820",
+				"method": "PATCH"
+			},
+			{
+				"id": "a1be546d-8c41-49f6-8a88-7f64d667b640",
+				"method": "PATCH"
+			},
+			{
+				"id": "fcb5ff62-d8cb-4feb-a94c-44e17fe17ec1",
+				"method": "GET"
+			},
+			{
+				"id": "fc5489c7-9753-4a4f-bdab-bf386aab3373",
+				"method": "POST"
+			},
+			{
+				"id": "4a1ac622-5723-4fe0-aefe-4269765c61c6",
+				"method": "POST"
+			},
+			{
+				"id": "2b4bd501-80ea-4eef-9773-6f0b809852ee",
+				"method": "POST"
+			},
+			{
+				"id": "37f0919d-b06c-4302-9795-e1afa2132768",
+				"method": "POST"
+			},
+			{
+				"id": "6fab80c1-e2ac-4eaf-8ce5-6271ae4aeba4",
+				"method": "POST"
+			},
+			{
+				"id": "c3ce0c3a-2551-423d-bda3-bd37a748ab2c",
+				"method": "POST"
+			},
+			{
+				"id": "f727f5a4-d0df-40ce-be53-59915aa8c363",
+				"method": "POST"
+			},
+			{
+				"id": "268da83f-4795-4d4f-b982-0202b7952ca7",
+				"method": "POST"
+			},
+			{
+				"id": "56c8263d-02b0-43e7-b225-6908d254fa60",
+				"method": "POST"
+			},
+			{
+				"id": "7ebfa1af-9566-471d-8a7e-832289685d84",
+				"method": "POST"
+			},
+			{
+				"id": "6f212244-ce6c-4240-8db0-c41b30a9440d",
+				"method": "POST"
+			},
+			{
+				"id": "b26b05d8-4d00-4ada-a475-6c5a68e629f9",
+				"method": "POST"
+			},
+			{
+				"id": "ae09d42e-bf07-49cc-8f4b-0613ac248dfb",
+				"method": "POST"
+			},
+			{
+				"id": "4ebeaa86-0f63-48ca-8091-a5cde15c2a0a",
+				"method": "POST"
+			},
+			{
+				"id": "ee275d06-d8bc-49dd-b095-317da666be46",
+				"method": "POST"
+			},
+			{
+				"id": "b4006547-9fa3-4a83-a46d-b3711b811e39",
+				"method": "POST"
+			},
+			{
+				"id": "97bb5ec3-c85e-4ea6-8cab-6b9aeb0b3748",
+				"method": "POST"
+			},
+			{
+				"id": "28df604d-46e3-4937-b1f0-80314b8de4aa",
+				"method": "POST"
+			},
+			{
+				"id": "a3c2d04c-63b9-4940-905c-91d672984f4f",
+				"method": "POST"
+			},
+			{
+				"id": "2a2dd3e2-fc1c-4fea-a474-93e75dbb33ce",
+				"method": "POST"
+			},
+			{
+				"id": "6060ec28-5793-40f5-a21d-1da998a7b5b8",
+				"method": "POST"
+			},
+			{
+				"id": "2a79df46-360d-47ca-aa18-16908cec226d",
+				"method": "POST"
+			},
+			{
+				"id": "b55ec385-7c9c-4b6f-aa94-627b1e554ae5",
+				"method": "POST"
+			},
+			{
+				"id": "478d1054-5f26-4699-9f4e-e53bf8b3b8e5",
+				"method": "POST"
+			},
+			{
+				"id": "2c3ac3cb-a44a-46c5-b8a2-e435c70b70ff",
+				"method": "POST"
+			},
+			{
+				"id": "e54d6d09-befb-4247-badc-208eaba0f6e7",
+				"method": "POST"
+			},
+			{
+				"id": "9f624ca2-3c15-4a82-b009-5ba2480a6fb6",
+				"method": "POST"
+			},
+			{
+				"id": "904b8f9c-cb96-4fd2-85de-bc3bb90aa681",
+				"method": "POST"
+			},
+			{
+				"id": "710b661b-a969-44ca-8db6-07d0aa447425",
+				"method": "POST"
+			},
+			{
+				"id": "8436db49-09bd-49d5-a583-d93b463bc5d5",
+				"method": "POST"
+			},
+			{
+				"id": "c8e52f85-63ac-4e0a-9ca1-cbb75db41b9c",
+				"method": "POST"
+			},
+			{
+				"id": "2a19c5aa-194c-42e2-a504-985d177e5aac",
+				"method": "POST"
+			},
+			{
+				"id": "d04fee69-9a24-4130-928f-8c32261573ef",
+				"method": "POST"
+			},
+			{
+				"id": "dd85065f-b811-4c69-9533-28c3b13c00eb",
+				"method": "POST"
+			},
+			{
+				"id": "a8ddab32-7ea8-49a2-bcfd-716c5b0b4dc8",
+				"method": "POST"
+			},
+			{
+				"id": "ffc0b002-de8c-4553-8611-0097b96d441b",
+				"method": "PATCH"
+			},
+			{
+				"id": "25c65b0e-7319-43c3-ac14-5f0ee3c2c45e",
+				"method": "PATCH"
+			},
+			{
+				"id": "09a70054-9b67-46b2-a24a-01145042052a",
+				"method": "GET"
+			},
+			{
+				"id": "690c5a73-1ca9-452b-a841-8e681b58a1d7",
+				"method": "POST"
+			},
+			{
+				"id": "81a22d08-6c48-4d46-81de-dd434fcfe3ef",
+				"method": "PATCH"
+			},
+			{
+				"id": "39fa3a58-f46e-4df2-b97a-61bd8eac5628",
+				"method": "POST"
+			},
+			{
+				"id": "ef0f94d0-6112-4cd6-9936-ece273095dae",
+				"method": "POST"
+			},
+			{
+				"id": "e8fa3dcd-4a7b-43bc-88ed-583427762590",
+				"method": "POST"
+			},
+			{
+				"id": "378af537-3c69-4b19-8d4e-2d28e051fec4",
+				"method": "PUT"
+			},
+			{
+				"id": "86d54982-c2e9-4e0b-8e30-f065ac66649b",
+				"method": "DELETE"
+			},
+			{
+				"id": "35d7d90e-139c-440a-96dc-b1173ab3ba3a",
+				"method": "GET"
+			},
+			{
+				"id": "ad368f34-db7a-4130-8ed9-c465c766e71b",
+				"method": "POST"
+			},
+			{
+				"id": "ec6afc83-6034-475e-a2b4-51cfde555ed0",
+				"method": "POST"
+			},
+			{
+				"id": "e2c12d00-5ca0-43f6-bd94-87045bb0ca67",
+				"method": "POST"
+			},
+			{
+				"id": "b4f4f5e1-17bb-4fa0-98aa-9f9257ed1da4",
+				"method": "POST"
+			},
+			{
+				"id": "7ea599d1-8b66-4ac2-9fcb-a50b49854b5b",
+				"method": "POST"
+			},
+			{
+				"id": "e3aa0e7e-448c-42f6-b7a5-bd7c0074114b",
+				"method": "POST"
+			},
+			{
+				"id": "6dd32038-f2e7-4dd6-a4ce-2694ef743fdc",
+				"method": "POST"
+			},
+			{
+				"id": "6ed3030e-7ef8-4c93-b521-2cb273a8114a",
+				"method": "POST"
+			},
+			{
+				"id": "c9fdce21-8ed4-4804-985d-397a8cf74c1d",
+				"method": "POST"
+			},
+			{
+				"id": "0af039bc-12b7-4d59-9d11-f9064a428193",
+				"method": "POST"
+			},
+			{
+				"id": "5c1ca4a9-2c24-4c29-a66e-cbaeed13c568",
+				"method": "POST"
+			},
+			{
+				"id": "a527e610-9118-4821-ad07-ae8de286bcad",
+				"method": "POST"
+			},
+			{
+				"id": "6135d1e3-9c5d-49ce-94d6-e75c7ae0470b",
+				"method": "GET"
+			}
+		]
+	}
+}

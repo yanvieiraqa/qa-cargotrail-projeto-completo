@@ -1,0 +1,15 @@
+{
+	"id": "59eb012c-becd-499b-b341-52bb70fc721b",
+	"name": "CargoTrail — Local",
+	"values": [
+		{
+			"key": "url",
+			"value": "http://localhost:8000",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-11-13T21:11:40.032Z",
+	"_postman_exported_using": "Postman/12.36.4"
+}

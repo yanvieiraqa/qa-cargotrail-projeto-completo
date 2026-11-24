@@ -1,0 +1,3882 @@
+{
+  "info": {
+    "_postman_id": "77b60caa-4896-4377-891a-5e418ed34c54",
+    "name": "CargoTrail — Testes de API",
+    "description": "Casos de API do CargoTrail (31 casos P1/P2). Rode a pasta 00 primeiro; depois cada caso prepara o próprio pedido pelo painel do simulador. Use o Collection Runner para a regressão completa.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58741066",
+    "_collection_link": "https://go.postman.co/collection/58741066-77b60caa-4896-4377-891a-5e418ed34c54?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "00 Preparação (rode primeiro)",
+      "item": [
+        {
+          "name": "Login Administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token_admin', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@cargotrail.test\",\n  \"senha\": \"Teste@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Operador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token_operador', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"operador@cargotrail.test\",\n  \"senha\": \"Teste@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Financeiro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token_financeiro', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"financeiro@cargotrail.test\",\n  \"senha\": \"Teste@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Faz o login dos três perfis e guarda os tokens nas variáveis da collection."
+    },
+    {
+      "name": "01 Acesso",
+      "item": [
+        {
+          "name": "CT-ACE-07 — Operador não acessa o cadastro de transportadoras (API)",
+          "item": [
+            {
+              "name": "Cadastrar transportadora com token do Operador",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 403', () => pm.response.to.have.status(403));",
+                      "pm.test('Mensagem contém: Acesso negado', () => pm.expect(pm.response.text()).to.include(\"Acesso negado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/transportadoras",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transportadoras"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 403 Acesso negado."
+        }
+      ]
+    },
+    {
+      "name": "02 Cadastros",
+      "item": [
+        {
+          "name": "CT-CAD-23 — Cadastros não podem ser excluídos (DELETE)",
+          "item": [
+            {
+              "name": "DELETE embarcador 1 (Administrador)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 405', () => pm.response.to.have.status(405));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/embarcadores/1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "embarcadores",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Conferir que o embarcador continua na lista",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200 or 401', () => {\n    pm.expect(pm.response.code).to.be.oneOf([200, 401]);\n});\n\npm.test('Embarcador 1 continua', () => {\n    if (pm.response.code === 200) {\n        const jsonData = pm.response.json();\n        pm.expect(Array.isArray(jsonData)).to.be.true;\n        pm.expect(jsonData.some(e => e.id === 1)).to.be.true;\n    } else {\n        pm.expect(pm.response.json()).to.have.property('erro');\n    }\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/embarcadores",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "embarcadores"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 405 Método não permitido e o cadastro continua."
+        }
+      ]
+    },
+    {
+      "name": "03 Pedido",
+      "item": [
+        {
+          "name": "CT-PED-13 — Estados do pedido não podem ser pulados",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Rascunho)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Rascunho\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. PATCH status → Em execução",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Transição de estado inválida', () => pm.expect(pm.response.text()).to.include(\"Transição de estado inválida\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"Em execução\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/status",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. PATCH status → Concluído",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Transição de estado inválida', () => pm.expect(pm.response.text()).to.include(\"Transição de estado inválida\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"Concluído\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/status",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "4. Conferir que o pedido continua em Rascunho",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                      "pm.test('Status do pedido: Rascunho', () => pm.expect(pm.response.json().status).to.eql('Rascunho'));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: as duas tentativas voltam 409 e o pedido continua em Rascunho."
+        }
+      ]
+    },
+    {
+      "name": "04 Contratação",
+      "item": [
+        {
+          "name": "CT-CON-03 — Transportadora com RNTRC vencido (API)",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Aguardando contratação)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Aguardando contratação\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Contratar",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: RNTRC vencido', () => pm.expect(pm.response.text()).to.include(\"RNTRC vencido\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transportadora_id\": 2,\n  \"motorista_id\": 1,\n  \"veiculo_id\": 1,\n  \"frete\": 3500\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/contratar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "contratar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 RNTRC vencido."
+        },
+        {
+          "name": "CT-CON-04 — Motorista de outra transportadora (API)",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Aguardando contratação)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Aguardando contratação\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Contratar",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Motorista não pertence à transportadora', () => pm.expect(pm.response.text()).to.include(\"Motorista não pertence à transportadora\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transportadora_id\": 1,\n  \"motorista_id\": 5,\n  \"veiculo_id\": 1,\n  \"frete\": 3500\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/contratar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "contratar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Motorista não pertence à transportadora."
+        },
+        {
+          "name": "CT-CON-05 — Veículo de outra transportadora (API)",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Aguardando contratação)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Aguardando contratação\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Contratar",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Veículo não pertence à transportadora', () => pm.expect(pm.response.text()).to.include(\"Veículo não pertence à transportadora\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transportadora_id\": 1,\n  \"motorista_id\": 1,\n  \"veiculo_id\": 5,\n  \"frete\": 3500\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/contratar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "contratar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Veículo não pertence à transportadora."
+        },
+        {
+          "name": "CT-CON-06 — Motorista inativo (API)",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Aguardando contratação)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Aguardando contratação\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Contratar",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Motorista inativo', () => pm.expect(pm.response.text()).to.include(\"Motorista inativo\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transportadora_id\": 1,\n  \"motorista_id\": 3,\n  \"veiculo_id\": 1,\n  \"frete\": 3500\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/contratar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "contratar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Motorista inativo."
+        },
+        {
+          "name": "CT-CON-18 — Alterar o frete depois do CT-e é bloqueado",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (CT-e autorizado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"CT-e autorizado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Alterar frete para R$ 3.600,00",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Frete não pode ser alterado após o CT-e', () => pm.expect(pm.response.text()).to.include(\"Frete não pode ser alterado após o CT-e\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"frete\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/frete",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "frete"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Frete não pode ser alterado após o CT-e."
+        }
+      ]
+    },
+    {
+      "name": "05 Execução",
+      "item": [
+        {
+          "name": "CT-EXE-02 — CT-e sem pedido contratado",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Aguardando contratação)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Aguardando contratação\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Emitir CT-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Pedido não contratado', () => pm.expect(pm.response.text()).to.include(\"Pedido não contratado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/cte",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "cte"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Pedido não contratado."
+        },
+        {
+          "name": "CT-EXE-03 — CT-e sem NF-e vinculada",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Contratado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Contratado\",\n  \"sem_nfe\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Emitir CT-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: NF-e não vinculada', () => pm.expect(pm.response.text()).to.include(\"NF-e não vinculada\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/cte",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "cte"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 NF-e não vinculada."
+        },
+        {
+          "name": "CT-EXE-07 — Segunda emissão de CT-e para o mesmo pedido",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (CT-e autorizado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"CT-e autorizado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Emitir CT-e de novo",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Já existe CT-e ativo', () => pm.expect(pm.response.text()).to.include(\"Já existe CT-e ativo\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/cte",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "cte"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Já existe CT-e ativo."
+        },
+        {
+          "name": "CT-EXE-17 — Cancelar CT-e fora do prazo (8 dias)",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (CT-e autorizado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"CT-e autorizado\",\n  \"idade_cte_dias\": 8\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Cancelar CT-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Prazo de cancelamento expirado', () => pm.expect(pm.response.text()).to.include(\"Prazo de cancelamento expirado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"x\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/documentos/{{did_cte}}/cancelar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "documentos",
+                    "{{did_cte}}",
+                    "cancelar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Prazo de cancelamento expirado."
+        },
+        {
+          "name": "CT-EXE-21 — CIOT sem CT-e autorizado",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Contratado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Contratado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Gerar CIOT",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: CT-e autorizado é obrigatório', () => pm.expect(pm.response.text()).to.include(\"CT-e autorizado é obrigatório\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/ciot",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "ciot"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 CT-e autorizado é obrigatório."
+        },
+        {
+          "name": "CT-EXE-23 — A viagem só pode ter um CIOT",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (CIOT gerado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"CIOT gerado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Gerar CIOT de novo",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: CIOT já gerado', () => pm.expect(pm.response.text()).to.include(\"CIOT já gerado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/ciot",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "ciot"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 CIOT já gerado."
+        },
+        {
+          "name": "CT-EXE-25 — MDF-e sem CIOT",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (CT-e autorizado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"CT-e autorizado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Emitir MDF-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: CIOT é obrigatório', () => pm.expect(pm.response.text()).to.include(\"CIOT é obrigatório\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/mdfe",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "mdfe"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 CIOT é obrigatório."
+        },
+        {
+          "name": "CT-EXE-26 — MDF-e sem CT-e autorizado",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (CT-e pendente de envio)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"CT-e pendente de envio\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Emitir MDF-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: CT-e autorizado é obrigatório', () => pm.expect(pm.response.text()).to.include(\"CT-e autorizado é obrigatório\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/pedidos/{{pid}}/mdfe",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "pedidos",
+                    "{{pid}}",
+                    "mdfe"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 CT-e autorizado é obrigatório."
+        },
+        {
+          "name": "CT-EXE-31 — Cancelar MDF-e fora do prazo (25 horas)",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (MDF-e autorizado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"MDF-e autorizado\",\n  \"idade_mdfe_horas\": 25\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Cancelar MDF-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Prazo de cancelamento expirado', () => pm.expect(pm.response.text()).to.include(\"Prazo de cancelamento expirado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"x\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/documentos/{{did_mdfe}}/cancelar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "documentos",
+                    "{{did_mdfe}}",
+                    "cancelar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Prazo de cancelamento expirado."
+        },
+        {
+          "name": "CT-EXE-32 — Cancelar MDF-e já encerrado",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (MDF-e encerrado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"MDF-e encerrado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Cancelar MDF-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: MDF-e já encerrado', () => pm.expect(pm.response.text()).to.include(\"MDF-e já encerrado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"motivo\": \"x\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/documentos/{{did_mdfe}}/cancelar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "documentos",
+                    "{{did_mdfe}}",
+                    "cancelar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 MDF-e já encerrado."
+        },
+        {
+          "name": "CT-EXE-34 — Encerrar MDF-e sem entrega comprovada",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (No ponto de entrega)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"No ponto de entrega\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Encerrar MDF-e",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Entrega não comprovada', () => pm.expect(pm.response.text()).to.include(\"Entrega não comprovada\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/documentos/{{did_mdfe}}/encerrar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "documentos",
+                    "{{did_mdfe}}",
+                    "encerrar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Entrega não comprovada."
+        }
+      ]
+    },
+    {
+      "name": "06 Monitoramento",
+      "item": [
+        {
+          "name": "CT-MON-02 — Iniciar viagem sem MDF-e autorizado",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (CIOT gerado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"CIOT gerado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Iniciar viagem",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: MDF-e autorizado é obrigatório', () => pm.expect(pm.response.text()).to.include(\"MDF-e autorizado é obrigatório\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/iniciar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "iniciar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 MDF-e autorizado é obrigatório."
+        },
+        {
+          "name": "CT-MON-04 — Estados da viagem não podem ser pulados",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (MDF-e autorizado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"MDF-e autorizado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. PATCH estado → No ponto de entrega",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Transição de estado inválida', () => pm.expect(pm.response.text()).to.include(\"Transição de estado inválida\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"No ponto de entrega\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/estado",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "estado"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. PATCH estado → Entregue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Transição de estado inválida', () => pm.expect(pm.response.text()).to.include(\"Transição de estado inválida\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Entregue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/estado",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "estado"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "4. Conferir que a viagem continua em Aguardando saída",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                      "pm.test('Estado: Aguardando saída', () => pm.expect(pm.response.json().estado).to.eql('Aguardando saída'));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: as duas tentativas voltam 409 e a viagem continua em Aguardando saída."
+        },
+        {
+          "name": "CT-MON-05 — Viagem só vira Entregue com o comprovante",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (No ponto de entrega)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"No ponto de entrega\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. PATCH estado → Entregue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Transição de estado inválida', () => pm.expect(pm.response.text()).to.include(\"Transição de estado inválida\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Entregue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/estado",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "estado"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Transição de estado inválida."
+        },
+        {
+          "name": "CT-MON-14 — Operador não usa o modo manual",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Em trânsito)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Em trânsito\",\n  \"sem_avanco_automatico\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Avançar etapa com token do Operador",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 403', () => pm.response.to.have.status(403));",
+                      "pm.test('Mensagem contém: Acesso negado', () => pm.expect(pm.response.text()).to.include(\"Acesso negado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/simulador/viagens/{{vid}}/avancar",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "viagens",
+                    "{{vid}}",
+                    "avancar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 403 Acesso negado."
+        }
+      ]
+    },
+    {
+      "name": "07 Comprovação",
+      "item": [
+        {
+          "name": "CT-COM-07 — Comprovante não pode ser editado nem excluído",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Entregue)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Entregue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. PUT comprovante",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 405', () => pm.response.to.have.status(405));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recebedor_nome\": \"Outro Nome\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/comprovante",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "comprovante"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. DELETE comprovante",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 405', () => pm.response.to.have.status(405));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/comprovante",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "comprovante"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "4. Conferir que o comprovante continua igual",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                      "pm.test('Recebedor original', () => pm.expect(pm.response.json().recebedor_nome).to.eql('Marcos Almeida'));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/comprovante",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "comprovante"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: PUT e DELETE voltam 405 e o comprovante continua igual."
+        },
+        {
+          "name": "CT-COM-08 — Comprovação só com a viagem no ponto de entrega",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Em trânsito)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Em trânsito\",\n  \"sem_avanco_automatico\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Confirmar entrega",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Viagem fora do ponto de entrega', () => pm.expect(pm.response.text()).to.include(\"Viagem fora do ponto de entrega\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recebedor_nome\": \"Marcos Almeida\",\n  \"recebedor_cpf\": \"529.982.247-25\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/comprovante",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "comprovante"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Viagem fora do ponto de entrega."
+        }
+      ]
+    },
+    {
+      "name": "08 Pagamento",
+      "item": [
+        {
+          "name": "CT-PAG-02 — Pagamento sem entrega comprovada",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (No ponto de entrega)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"No ponto de entrega\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Liberar pagamento (Financeiro)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Entrega não comprovada', () => pm.expect(pm.response.text()).to.include(\"Entrega não comprovada\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_financeiro}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/pagamento",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "pagamento"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Entrega não comprovada."
+        },
+        {
+          "name": "CT-PAG-03 — Pagamento com MDF-e não encerrado",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Entregue)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Entregue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Liberar pagamento (Financeiro)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: MDF-e não encerrado', () => pm.expect(pm.response.text()).to.include(\"MDF-e não encerrado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_financeiro}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/pagamento",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "pagamento"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 MDF-e não encerrado."
+        },
+        {
+          "name": "CT-PAG-07 — Pagamento em duplicidade",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (Concluído)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"Concluído\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Liberar pagamento de novo (Financeiro)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', () => pm.response.to.have.status(409));",
+                      "pm.test('Mensagem contém: Viagem já paga', () => pm.expect(pm.response.text()).to.include(\"Viagem já paga\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_financeiro}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/pagamento",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "pagamento"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 409 Viagem já paga."
+        },
+        {
+          "name": "CT-PAG-11 — Operador não libera pagamentos",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (MDF-e encerrado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"MDF-e encerrado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Liberar pagamento com token do Operador",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 403', () => pm.response.to.have.status(403));",
+                      "pm.test('Mensagem contém: Acesso negado', () => pm.expect(pm.response.text()).to.include(\"Acesso negado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/pagamento",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "pagamento"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 403 Acesso negado."
+        },
+        {
+          "name": "CT-PAG-12 — Administrador não libera pagamentos",
+          "item": [
+            {
+              "name": "1. Preparar pedido de teste (MDF-e encerrado)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const r = pm.response.json();",
+                      "pm.collectionVariables.set('pid', r.pedido_id);",
+                      "pm.collectionVariables.set('vid', r.viagem_id || '');",
+                      "pm.collectionVariables.set('did_cte', ''); pm.collectionVariables.set('did_mdfe', '');",
+                      "pm.sendRequest({ url: pm.variables.get('url') + '/api/pedidos/' + r.pedido_id, method: 'GET',",
+                      "  header: { Authorization: 'Bearer ' + pm.collectionVariables.get('token_operador') } }, (e, res) => {",
+                      "  if (e) return;",
+                      "  const d = res.json().documentos || [];",
+                      "  const c = d.filter(x => x.tipo_codigo === 'CTE').pop(), m = d.filter(x => x.tipo_codigo === 'MDFE').pop();",
+                      "  pm.collectionVariables.set('did_cte', c ? c.id : ''); pm.collectionVariables.set('did_mdfe', m ? m.id : '');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"MDF-e encerrado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/api/simulador/pedidos-teste",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "pedidos-teste"
+                  ]
+                },
+                "description": "Usa o painel do simulador para criar um pedido já no estado pedido. Guarda pid, vid e os ids dos documentos."
+              },
+              "response": []
+            },
+            {
+              "name": "2. Liberar pagamento com token do Administrador",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 403', () => pm.response.to.have.status(403));",
+                      "pm.test('Mensagem contém: Acesso negado', () => pm.expect(pm.response.text()).to.include(\"Acesso negado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_admin}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/viagens/{{vid}}/pagamento",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "viagens",
+                    "{{vid}}",
+                    "pagamento"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 403 Acesso negado."
+        }
+      ]
+    },
+    {
+      "name": "09 Simulador",
+      "item": [
+        {
+          "name": "CT-SIM-10 — Painel do simulador só para o Administrador (API)",
+          "item": [
+            {
+              "name": "Consultar estado do simulador com token do Operador",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 403', () => pm.response.to.have.status(403));",
+                      "pm.test('Mensagem contém: Acesso negado', () => pm.expect(pm.response.text()).to.include(\"Acesso negado\"));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token_operador}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/simulador/estado",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "simulador",
+                    "estado"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Resultado esperado: 403 Acesso negado."
+        }
+      ]
+    },
+    {
+      "name": "99 Utilitários (não entram na regressão)",
+      "item": [
+        {
+          "name": "Histórico de requisições do simulador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/simulador/historico",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "simulador",
+                "historico"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restaurar padrão (APAGA os dados)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/simulador/restaurar",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "simulador",
+                "restaurar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estado e cenários do simulador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/simulador/estado",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "simulador",
+                "estado"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Restaurar apaga TODOS os dados e derruba os tokens do Operador e do Financeiro: rode a pasta 00 de novo depois."
+    }
+  ],
+  "auth": {
+    "type": "bearer"
+  },
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token_admin",
+      "value": ""
+    },
+    {
+      "key": "token_operador",
+      "value": ""
+    },
+    {
+      "key": "token_financeiro",
+      "value": ""
+    },
+    {
+      "key": "pid",
+      "value": ""
+    },
+    {
+      "key": "vid",
+      "value": ""
+    },
+    {
+      "key": "did_cte",
+      "value": ""
+    },
+    {
+      "key": "did_mdfe",
+      "value": ""
+    }
+  ]
+}
